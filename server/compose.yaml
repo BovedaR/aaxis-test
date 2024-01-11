@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - database
+    environment:
+      # this should be changed but its just a test
+      APP_SECRET=8affc1b07afa0f4afc50253fc075a12e
+      APP_ENV=dev
+      DATABASE_URL="postgresql://aaxis:test@database:5432/aaxis-test?serverVersion=13&charset=utf8"
+      JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
+      JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
+      JWT_PASSPHRASE=test
+      CORS_ALLOW_ORIGIN='^http?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
+    
+  database:
+    image: postgres:${POSTGRES_VERSION:-15}-alpine
+    environment:
+      POSTGRES_DB: "aaxis-test"
+      POSTGRES_PASSWORD: "test"
+      POSTGRES_USER: "aaxis"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  
+  frontend:
+    build: ../client
+    ports:
+      - 8080:80
+    restart: on-failure

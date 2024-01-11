@@ -1,0 +1,27 @@
+# config/packages/security.yaml
+security:
+    password_hashers:
+        App\Entity\User: auto
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: username
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        auth:
+            pattern:  ^/auth
+            stateless: true
+            lazy: true
+        api:
+            pattern:   ^/api
+            stateless: true
+            jwt:       ~
+
+    access_control:
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
