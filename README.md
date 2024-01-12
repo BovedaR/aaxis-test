@@ -20,11 +20,15 @@ cd crud
 
 ### Generate the keys
 
-Execute the generate_keys.sh to generate the key pairs for jwt
+* Get "server-php" CONTAINER ID
+    ```
+    docker ps
+    ```
 
-```
-./generate_keys.sh
-```
+* Execute the following command replacing CONTAINER ID to generate the key pairs for jwt
+    ```
+    docker exec -it CONTAINER php bin/console lexik:jwt:generate-keypair
+    ```
 
 ## Run the Project
 ```
